@@ -1,6 +1,7 @@
 #include <iostream>
 #include "car.hpp"
 #include "rectangle.hpp"
+#include "Vector2.hpp"
 
 int main(int argc, char ** argv)
 {    
@@ -13,7 +14,6 @@ int main(int argc, char ** argv)
         long long
         bool
         void
-
         |-------------------------------|
         | (type) (name) = (val) [addr]  |
         | int x = 4; (32 bits)          |
@@ -55,6 +55,18 @@ int main(int argc, char ** argv)
     honda.drive();
     renault.drive();
     toyota.drive();
+
+    // Vector2 class client code
+    
+    // Creates new instances of vector class
+    Vector2 vec1(5.0, 2.0);
+    Vector2 vec2(15.0, 20.0);
+    Vector2 vec3(50.0, 23.0);
+
+    // Calls the print function
+    vec1.print();
+    vec2.print();
+    vec3.print();
 
     return 0;
 }
