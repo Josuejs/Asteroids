@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++
 CFLAGS=-c -Wall -std=c++0x
 LDFLAGS=
 SOURCES=$(wildcard *.c *.cpp)
