@@ -1,7 +1,7 @@
 #include "App.hpp"
 #include <iostream>
 #include <algorithm>
-
+#include "Ship.hpp"
 // OpenGL includes
 //#include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
@@ -18,9 +18,13 @@ namespace Engine
 		, m_nUpdates(0)
 		, m_timer(new TimeManager)
 		, m_mainWindow(nullptr)
+
+	
 	{
 		m_state = GameState::UNINITIALIZED;
 		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
+		m_ship = new ship;
+		
 	}
 
 	App::~App()
@@ -29,7 +33,10 @@ namespace Engine
 
         // Removes timer allocation
         delete m_timer;
+		delete m_ship;
+		
 	}
+
 
 	void App::Execute()
 	{
@@ -125,48 +132,16 @@ namespace Engine
 		m_nUpdates++;
 	}
 
-	void App::Render()
-	{
-		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 
-		// glBegin(GL_QUADS);		
-		// 	glVertex2f(50.0, 50.0);
-        //     glVertex2f(50.0, -50.0);
-        //     glVertex2f(-50.0, -50.0);
-        //     glVertex2f(-50.0, 50.0);	
-		// glEnd();
-
-		// glBegin(GL_TRIANGLES);
-		// 	glVertex3f(-50.0, -50.0, 0.0);
-		// 	glVertex3f( 0.0,  50.0, 0.0);
-		// 	glVertex3f( 50.0, -50.0, 0.0);
-		// glEnd();
-
-		// glBegin(GL_LINE_LOOP);
-		// 	glVertex3f(-50.0, -50.0, 0.0);
-		// 	glVertex3f( 0.0,  50.0, 0.0);
-		// 	glVertex3f( 50.0, -50.0, 0.0);
-		// glEnd();
-
-		// glBegin(GL_LINE_LOOP);
-            // glVertex2f(50.0, 50.0);
-            // glVertex2f(50.0, -50.0);
-            // glVertex2f(-50.0, -50.0);
-            // glVertex2f(-50.0, 50.0);			
-		// glEnd();
-
-		glBegin(GL_LINE_LOOP);
-			glVertex2f(0.0, 20.0);
-			glVertex2f( 12.0,  -10.0);
-			glVertex2f( 6.0, -4.0);
-			glVertex2f( -6.0, -4.0);
-			glVertex2f( -12.0, -10.0);
-		glEnd();
+	 void App::Render()
+	 {
+	 	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+	 	glClear(GL_COLOR_BUFFER_BIT);
+		m_ship->render();
 
 		SDL_GL_SwapWindow(m_mainWindow);
-	}
-
+	  }
+	
 	bool App::SDLInit()
 	{
 		// Initialize SDL's Video subsystem
@@ -255,6 +230,7 @@ namespace Engine
 
 		SDL_Quit();
 	}
+
 
 	void App::OnResize(int width, int height)
 	{
