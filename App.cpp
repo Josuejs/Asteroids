@@ -1,15 +1,18 @@
 #include "App.hpp"
-#include <iostream>
 #include <algorithm>
-#include "Ship.hpp"
+
 // OpenGL includes
-//#include <GL/glew.h>
+#include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 
+//
+#include "Ship.hpp"
+#include "Asteroid.hpp"
+
 namespace Engine
-{
+{	
 	const float DESIRED_FRAME_RATE = 60.0f;
-	const float DESIRED_FRAME_TIME = 1.0f / DESIRED_FRAME_RATE;
+	const float DESIRED_FRAME_TIME = 1.0f / DESIRED_FRAME_RATE;	
 
 	App::App(const std::string& title, const int width, const int height)
 		: m_title(title)
@@ -18,13 +21,11 @@ namespace Engine
 		, m_nUpdates(0)
 		, m_timer(new TimeManager)
 		, m_mainWindow(nullptr)
-
-	
 	{
 		m_state = GameState::UNINITIALIZED;
 		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
-		m_ship = new ship;
-		
+		m_ship = new Ship;
+		m_asteroid = new Asteroid;
 	}
 
 	App::~App()
@@ -33,16 +34,19 @@ namespace Engine
 
         // Removes timer allocation
         delete m_timer;
-		delete m_ship;
-		
-	}
 
+		// Removes ship allocation
+		delete m_ship;
+
+		// Removes asteroid
+		delete m_asteroid;
+	}
 
 	void App::Execute()
 	{
 		if (m_state != GameState::INIT_SUCCESSFUL)
 		{
-			std::cerr << "Game INIT was not successful." << std::endl;
+			SDL_Log("Game INIT was not successful.");
 			return;
 		}
 
@@ -77,7 +81,7 @@ namespace Engine
 
 		// Setup the viewport
 		//
-		SetupViewport();
+		SetupViewPort();
 
 		// Change game state
 		//
@@ -87,10 +91,27 @@ namespace Engine
 	}
 
 	void App::OnKeyDown(SDL_KeyboardEvent keyBoardEvent)
-	{		
+	{
+		const float MOVE_UNIT = 15.f;
 		switch (keyBoardEvent.keysym.scancode)
 		{
-		default:			
+		case SDL_SCANCODE_W:
+			SDL_Log("Going up");	
+			m_ship->Move(0.0f, MOVE_UNIT);		
+			break;
+		case SDL_SCANCODE_A:
+			SDL_Log("Going left");
+			m_ship->Move(-MOVE_UNIT, 0.0f);
+			break;
+		case SDL_SCANCODE_S:
+			SDL_Log("Going down");
+			m_ship->Move(0.0f, -MOVE_UNIT);	
+			break;
+		case SDL_SCANCODE_D:
+			SDL_Log("Going right");
+			m_ship->Move(MOVE_UNIT, 0.0f);
+			break;
+		default:
 			SDL_Log("%S was pressed.", keyBoardEvent.keysym.scancode);
 			break;
 		}
@@ -125,30 +146,30 @@ namespace Engine
 			endTime = m_timer->GetElapsedTimeInSeconds();
 		}
 
-		//double elapsedTime = endTime - startTime;        
-
 		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
 
 		m_nUpdates++;
 	}
 
+	void App::Render()
+	{
+		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	 void App::Render()
-	 {
-	 	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-	 	glClear(GL_COLOR_BUFFER_BIT);
-		m_ship->render();
-
+		// Render code goes here
+		m_ship->Render();
+		m_asteroid->Render();
+		
 		SDL_GL_SwapWindow(m_mainWindow);
-	  }
-	
+	}
+
 	bool App::SDLInit()
 	{
 		// Initialize SDL's Video subsystem
 		//
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		{
-			std::cerr << "Failed to init SDL" << std::endl;
+			SDL_Log("Failed to init SDL");
 			return false;
 		}
 
@@ -170,7 +191,7 @@ namespace Engine
 
 		if (!m_mainWindow)
 		{
-			std::cerr << "Failed to create window!" << std::endl;
+			SDL_Log("Failed to create window!");
 			SDL_Quit();
 			return false;
 		}
@@ -184,7 +205,7 @@ namespace Engine
 		return true;
 	}
 
-	void App::SetupViewport()
+	void App::SetupViewPort()
 	{
 		// Defining ortho values
 		//
@@ -231,7 +252,6 @@ namespace Engine
 		SDL_Quit();
 	}
 
-
 	void App::OnResize(int width, int height)
 	{
 		// TODO: Add resize functionality
@@ -239,7 +259,7 @@ namespace Engine
 		m_width = width;
 		m_height = height;
 
-		SetupViewport();
+		SetupViewPort();
 	}
 
 	void App::OnExit()
