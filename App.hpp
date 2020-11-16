@@ -1,3 +1,4 @@
+  
 #pragma once
 
 #ifndef APP_HPP
@@ -47,6 +48,8 @@ namespace Engine
             bool Init            ( );
             void Update          ( );
             void Render          ( );
+            int  GetWidth        ( ) { return m_width; }
+            int  GetHeight       ( ) { return m_height; }
         private:
             /* =============================================================
             * PRIVATE FUNCTIONS
@@ -73,7 +76,7 @@ namespace Engine
 		    GameState::State	 m_state;
             Engine::TimeManager* m_timer;
             Engine::Ship*        m_ship;
-            Engine::Asteroid*        m_asteroid;
+            Engine::Asteroid*    m_asteroid;
     };
 }
 

@@ -24,8 +24,9 @@ namespace Engine
 	{
 		m_state = GameState::UNINITIALIZED;
 		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
-		m_ship = new Ship;
-		m_asteroid = new Asteroid;
+
+		m_ship = new Engine::Ship(this);
+		// m_asteroid = new Asteroid;
 	}
 
 	App::~App()
@@ -39,7 +40,7 @@ namespace Engine
 		delete m_ship;
 
 		// Removes asteroid
-		delete m_asteroid;
+		// delete m_asteroid;
 	}
 
 	void App::Execute()
@@ -76,6 +77,7 @@ namespace Engine
 		if (!success)
 		{
 			m_state = GameState::INIT_FAILED;
+			SDL_Log("Game INIT failed.");
 			return false;
 		}
 
@@ -97,19 +99,17 @@ namespace Engine
 		{
 		case SDL_SCANCODE_W:
 			SDL_Log("Going up");	
-			m_ship->Move(0.0f, MOVE_UNIT);		
+			m_ship->MoveUp();	
 			break;
 		case SDL_SCANCODE_A:
 			SDL_Log("Going left");
-			m_ship->Move(-MOVE_UNIT, 0.0f);
+			m_ship->RotateLeft(DESIRED_FRAME_TIME);
 			break;
-		case SDL_SCANCODE_S:
-			SDL_Log("Going down");
-			m_ship->Move(0.0f, -MOVE_UNIT);	
+		case SDL_SCANCODE_S:			
 			break;
 		case SDL_SCANCODE_D:
 			SDL_Log("Going right");
-			m_ship->Move(MOVE_UNIT, 0.0f);
+			m_ship->RotateRight(DESIRED_FRAME_TIME);
 			break;
 		default:
 			SDL_Log("%S was pressed.", keyBoardEvent.keysym.scancode);
@@ -136,6 +136,7 @@ namespace Engine
 
 		// Update code goes here
 		//
+		m_ship->Update(DESIRED_FRAME_TIME);
 
 		double endTime = m_timer->GetElapsedTimeInSeconds();
 		double nextTimeFrame = startTime + DESIRED_FRAME_TIME;
@@ -158,7 +159,7 @@ namespace Engine
 
 		// Render code goes here
 		m_ship->Render();
-		m_asteroid->Render();
+		// m_asteroid->Render();
 		
 		SDL_GL_SwapWindow(m_mainWindow);
 	}
