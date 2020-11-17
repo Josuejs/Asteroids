@@ -11,8 +11,8 @@ namespace Engine
 {
     // TODO: RR: Move this to a lib
     const float PI = 3.141592653;
-    const float MAX_VELOCITY = 500.0f;
-    const float THRUST = 15.0f;
+    const float MAX_VELOCITY = 225.0f;
+    const float THRUST = 35.0f;
     const float DRAG_FORCE = 0.999f;
     const float ANGLE_OFFSET = 90.0f;
 
@@ -28,7 +28,7 @@ namespace Engine
         : m_position(Math::Vector2::Origin)   
         , m_velocity(Math::Vector2::Origin)  
         , m_angle(0.0f)     
-        , m_rotation(250.0f)
+        , m_rotation(350.0f)
         , m_mass(1.0f)
         , m_parent(parent) // TODO: RR: Contemplate using a component based design approach
     {        
@@ -40,7 +40,7 @@ namespace Engine
         : m_position(_x, _y)    
         , m_velocity(Math::Vector2::Origin)  
         , m_angle(0.0f)     
-        , m_rotation(250.0f)
+        , m_rotation(350.0f)
         , m_mass(1.0f)    
         , m_parent(parent)
     {
