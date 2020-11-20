@@ -29,6 +29,7 @@ namespace Engine
             /* ==========================
             * CONSTRUCTORS
             * ==========================*/
+            static constexpr float PI = 3.141592653;
             float x;
             float y;
             float length;
