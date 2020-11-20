@@ -8,7 +8,6 @@
 #include <string>
 #include <list>
 
-//
 #include "SDLEvent.hpp"
 #include "TimeManager.hpp"
 
@@ -50,7 +49,8 @@ namespace Engine
             void Render          ( );
             int  GetWidth        ( ) { return m_width; }
             int  GetHeight       ( ) { return m_height; }
-        private:
+
+            private:
             /* =============================================================
             * PRIVATE FUNCTIONS
             * ============================================================= */
@@ -62,7 +62,7 @@ namespace Engine
             void OnExit          ( ) override;
             void OnKeyDown       ( SDL_KeyboardEvent keyBoardEvent ) override;
             void OnKeyUp         ( SDL_KeyboardEvent keyBoardEvent ) override;
-
+            
            /* =============================================================
             * MEMBER
             * ============================================================= */
@@ -77,6 +77,7 @@ namespace Engine
             Engine::TimeManager* m_timer;
             Engine::Ship*        m_ship;
             Engine::Asteroid*    m_asteroid;
+            Engine::Ship*        m_currentShip;
     };
 }
 
