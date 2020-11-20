@@ -1,7 +1,11 @@
 #include "Ship.hpp"
 #include "App.hpp"
+#include "vector2.hpp"
+#include "Wrap.hpp"
 
 #include <gl\GL.h>
+#include <SDL2\SDL.h>
+
 
 // STL
 #include <iostream>
@@ -10,19 +14,10 @@
 namespace Engine
 {
     // TODO: RR: Move this to a lib
-    const float PI = 3.141592653;
     const float MAX_VELOCITY = 225.0f;
     const float THRUST = 35.0f;
     const float DRAG_FORCE = 0.999f;
     const float ANGLE_OFFSET = 90.0f;
-
-    // TODO: RR: Get this out of here!
-    inline float wrap(float x, float min, float max)
-    {
-        if(x < min) return max - (min - x);
-        if(x > max) return min + (x - max);
-        return x;
-    }
 
     Ship::Ship(App* parent)
         : m_position(Math::Vector2::Origin)   
@@ -77,8 +72,8 @@ namespace Engine
     {
         if(m_mass > 0)
         {
-            m_velocity.x += (impulse.x / m_mass) * cosf((m_angle + ANGLE_OFFSET) * (PI / 180));
-            m_velocity.y += (impulse.y / m_mass) * sinf((m_angle + ANGLE_OFFSET) * (PI / 180));
+            m_velocity.x += (impulse.x / m_mass) * cosf((m_angle + ANGLE_OFFSET) * (Engine::Math::Vector2::PI / 180));
+            m_velocity.y += (impulse.y / m_mass) * sinf((m_angle + ANGLE_OFFSET) * (Engine::Math::Vector2::PI / 180));
         }
     }
 
@@ -104,7 +99,6 @@ namespace Engine
         ApplyDrag(Math::Vector2(DRAG_FORCE));
 
         // Calculations for wrap around
-        // TODO: RR: Create a parent class to handle this for all rendered entities
         float halfWidth = m_parent->GetWidth() / 2.0f;
         float halfHeight = m_parent->GetHeight() / 2.0f;
 
@@ -120,21 +114,36 @@ namespace Engine
 
     void Ship::ChangeShip()
     {
-        //Ship part #1
-        //m_points.push_back(Math::Vector2(20.0, 4.0));
-		//m_points.push_back(Math::Vector2(19.0, 2.0));
-		//m_points.push_back(Math::Vector2(17.0, 2.0));
-		//m_points.push_back(Math::Vector2(16.0, 4.0));
+        int m_currentShip;
+    
+        m_currentShip = ++m_currentShip % 3;
 
+		m_points.clear();
 
-        // Ship part #2
-		//m_points.push_back(Math::Vector2(-16.0, 4.0));
-        //m_points.push_back(Math::Vector2(-17.0, 2.0));
-        //m_points.push_back(Math::Vector2(-19.0, 2.0));
-        //m_points.push_back(Math::Vector2(-20.0, 4.0));
+		switch (m_currentShip)
+		{
 
+        case 1:
+        
+        m_points.push_back(Math::Vector2(0.0f, 20.0f));
+		m_points.push_back(Math::Vector2(12.0f, -10.0f));
+		m_points.push_back(Math::Vector2(6.0f, -4.0f));
+		m_points.push_back(Math::Vector2(-6.0f, -4.0f));
+		m_points.push_back(Math::Vector2(-12.0f, -10.0f));
+        break;
 
-        // Ship part #3
+        case 2:  
+
+        m_points.push_back(Math::Vector2(0.0f, 20.0f));
+		m_points.push_back(Math::Vector2(12.0f, -10.0f));
+		m_points.push_back(Math::Vector2(6.0f, -4.0f));
+		m_points.push_back(Math::Vector2(-6.0f, -4.0f));
+		m_points.push_back(Math::Vector2(-12.0f, -10.0f));
+        break;
+
+        default:  
+
+                    // Default Ship //
         m_points.push_back(Math::Vector2(4.0, 23.0));
         m_points.push_back(Math::Vector2(6.0, 17.0));
         m_points.push_back(Math::Vector2(2.0, 11.0));
@@ -142,12 +151,8 @@ namespace Engine
         m_points.push_back(Math::Vector2(-5.96, 17.17));
         m_points.push_back(Math::Vector2(-4.0, 23.0));
 
-        // Ship part #4
-        //m_points.push_back(Math::Vector2(6.0, 4.0));
-        //m_points.push_back(Math::Vector2(-6.0, 4.0));
 
-
-        // Ship //
+        // Ship part #2
         m_points.push_back(Math::Vector2(-8.0, 19.0));
         m_points.push_back(Math::Vector2(-8.0, 33.0));
         m_points.push_back(Math::Vector2(-4.0, 37.0));
@@ -173,9 +178,25 @@ namespace Engine
         m_points.push_back(Math::Vector2(-24.0, 9.0));
         m_points.push_back(Math::Vector2(-13.0, 13.0));
         m_points.push_back(Math::Vector2(-8.0, 19.0));
+        	break;
+		}
+	}
 
+      void Ship::Respawn()
+    {
+        glLoadIdentity();
+        m_position.x = 0.0f;
+        m_position.y = 0.0f;
+        m_velocity.x = 0.0f;
+        m_velocity.y = 0.0f;
+        m_angle = 0.0f;
+
+        glTranslatef(m_position.x, m_position.y, 0.0);
+
+        glRotatef(m_angle, 0.0f, 0.0f, 1.0f);
+
+        glBegin(GL_LINE_LOOP);
     }
-
 
     void Ship::Render()
     {
