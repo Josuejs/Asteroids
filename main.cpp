@@ -1,15 +1,19 @@
 #define VERSION
 
+#include "App.hpp"
+
 // C++ STL
 #include <iostream>
 #include <string> 
-#include "App.hpp"
+#include <stdlib.h>
+#include <SDL2\SDL.h>
 
 const int WIDTH = 1136;
 const int HEIGHT = 640;
 
 int main(int argc, char ** argv)
 {
+
 	// Game Version
 	const std::string version("v0.4.0");
 	const char* data = version.data();
