@@ -30,6 +30,7 @@ namespace Engine
         void RotateRight(float deltaTime);
         void Update(float deltaTime);
         void Render();
+        void Respawn();
 
     private:
         /* ==========================
