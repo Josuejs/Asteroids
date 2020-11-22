@@ -18,7 +18,7 @@ namespace Engine
     const float THRUST = 35.0f;
     const float DRAG_FORCE = 0.999f;
     const float ANGLE_OFFSET = 90.0f;
-
+   
     Ship::Ship(App* parent)
         : m_position(Math::Vector2::Origin)   
         , m_velocity(Math::Vector2::Origin)  
@@ -112,27 +112,49 @@ namespace Engine
         m_position.y = wrap(m_position.y, worldMinY, worldMaxY);
     }
 
-    void Ship::ChangeShip()
+
+     void Ship::ChangeShip()
     {
         int m_currentShip;
     
-        m_currentShip = ++m_currentShip % 3;
+        m_currentShip = ++m_currentShip % 2;
 
 		m_points.clear();
 
+       
+
 		switch (m_currentShip)
 		{
-
+              
         case 1:
+
+        glBegin(GL_POLYGON);
+            glColor3f (1.0, 0.5, 1.0);
+            glVertex3f (0.25, 0.25, 0.0);
+            glVertex3f (0.75, 0.25, 0.0);
+            glColor3f (1.0, 1.0, 0.0);
+            glVertex3f (0.75, 0.75, 0.0);
+            glVertex3f (0.25, 0.75, 0.0);
+        glEnd();
         
         m_points.push_back(Math::Vector2(0.0f, 20.0f));
 		m_points.push_back(Math::Vector2(12.0f, -10.0f));
 		m_points.push_back(Math::Vector2(6.0f, -4.0f));
 		m_points.push_back(Math::Vector2(-6.0f, -4.0f));
 		m_points.push_back(Math::Vector2(-12.0f, -10.0f));
+       
         break;
 
         case 2:  
+        
+        glBegin(GL_POLYGON);
+            glColor3f (1.0, 0.5, 1.0);
+            glVertex3f (0.25, 0.25, 0.0);
+            glVertex3f (0.75, 0.25, 0.0);
+            glColor3f (1.0, 1.0, 0.0);
+            glVertex3f (0.75, 0.75, 0.0);
+            glVertex3f (0.25, 0.75, 0.0);
+        glEnd();
 
         m_points.push_back(Math::Vector2(0.0f, 20.0f));
 		m_points.push_back(Math::Vector2(12.0f, -10.0f));
@@ -143,6 +165,14 @@ namespace Engine
 
         default:  
 
+         glBegin(GL_POLYGON);
+            glColor3f (1.0, 0.0, 0.0);
+            glVertex3f (0.25, 0.25, 0.0);
+            glVertex3f (0.75, 0.25, 0.0);
+            glColor3f (0.0, 0.0, 1.0);
+            glVertex3f (0.75, 0.75, 0.0);
+            glVertex3f (0.25, 0.75, 0.0);
+        glEnd();
                     // Default Ship //
         m_points.push_back(Math::Vector2(4.0, 23.0));
         m_points.push_back(Math::Vector2(6.0, 17.0));
@@ -180,7 +210,7 @@ namespace Engine
         m_points.push_back(Math::Vector2(-8.0, 19.0));
         	break;
 		}
-	}
+	} 
 
       void Ship::Respawn()
     {
