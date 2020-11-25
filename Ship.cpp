@@ -1,7 +1,7 @@
 #include "Ship.hpp"
 #include "App.hpp"
 #include "vector2.hpp"
-#include "Wrap.hpp"
+//#include "Wrap.hpp"
 
 #include <gl\GL.h>
 #include <SDL2\SDL.h>
@@ -19,6 +19,14 @@ namespace Engine
     const float DRAG_FORCE = 0.999f;
     const float ANGLE_OFFSET = 90.0f;
    
+     // TODO: RR: Get this out of here!
+    inline float wrap(float x, float min, float max)
+    {
+        if(x < min) return max - (min - x);
+        if(x > max) return min + (x - max);
+        return x;
+    }
+
     Ship::Ship(App* parent)
         : m_position(Math::Vector2::Origin)   
         , m_velocity(Math::Vector2::Origin)  
@@ -128,51 +136,6 @@ namespace Engine
               
         case 1:
 
-        glBegin(GL_POLYGON);
-            glColor3f (1.0, 0.5, 1.0);
-            glVertex3f (0.25, 0.25, 0.0);
-            glVertex3f (0.75, 0.25, 0.0);
-            glColor3f (1.0, 1.0, 0.0);
-            glVertex3f (0.75, 0.75, 0.0);
-            glVertex3f (0.25, 0.75, 0.0);
-        glEnd();
-        
-        m_points.push_back(Math::Vector2(0.0f, 20.0f));
-		m_points.push_back(Math::Vector2(12.0f, -10.0f));
-		m_points.push_back(Math::Vector2(6.0f, -4.0f));
-		m_points.push_back(Math::Vector2(-6.0f, -4.0f));
-		m_points.push_back(Math::Vector2(-12.0f, -10.0f));
-       
-        break;
-
-        case 2:  
-        
-        glBegin(GL_POLYGON);
-            glColor3f (1.0, 0.5, 1.0);
-            glVertex3f (0.25, 0.25, 0.0);
-            glVertex3f (0.75, 0.25, 0.0);
-            glColor3f (1.0, 1.0, 0.0);
-            glVertex3f (0.75, 0.75, 0.0);
-            glVertex3f (0.25, 0.75, 0.0);
-        glEnd();
-
-        m_points.push_back(Math::Vector2(0.0f, 20.0f));
-		m_points.push_back(Math::Vector2(12.0f, -10.0f));
-		m_points.push_back(Math::Vector2(6.0f, -4.0f));
-		m_points.push_back(Math::Vector2(-6.0f, -4.0f));
-		m_points.push_back(Math::Vector2(-12.0f, -10.0f));
-        break;
-
-        default:  
-
-         glBegin(GL_POLYGON);
-            glColor3f (1.0, 0.0, 0.0);
-            glVertex3f (0.25, 0.25, 0.0);
-            glVertex3f (0.75, 0.25, 0.0);
-            glColor3f (0.0, 0.0, 1.0);
-            glVertex3f (0.75, 0.75, 0.0);
-            glVertex3f (0.25, 0.75, 0.0);
-        glEnd();
                     // Default Ship //
         m_points.push_back(Math::Vector2(4.0, 23.0));
         m_points.push_back(Math::Vector2(6.0, 17.0));
@@ -187,7 +150,7 @@ namespace Engine
         m_points.push_back(Math::Vector2(-8.0, 33.0));
         m_points.push_back(Math::Vector2(-4.0, 37.0));
         m_points.push_back(Math::Vector2(-4.0, 23.0));
-        m_points.push_back(Math::Vector2( -3.0, 24.0));
+        m_points.push_back(Math::Vector2(-3.0, 24.0));
         m_points.push_back(Math::Vector2(-1.0, 25.0));
         m_points.push_back(Math::Vector2(0.0, 25.35));
         m_points.push_back(Math::Vector2(1.0, 25.0));
@@ -208,6 +171,16 @@ namespace Engine
         m_points.push_back(Math::Vector2(-24.0, 9.0));
         m_points.push_back(Math::Vector2(-13.0, 13.0));
         m_points.push_back(Math::Vector2(-8.0, 19.0));
+        break;
+
+        default:  
+        
+        m_points.push_back(Math::Vector2(0.0f, 20.0f));
+		m_points.push_back(Math::Vector2(12.0f, -10.0f));
+		m_points.push_back(Math::Vector2(6.0f, -4.0f));
+		m_points.push_back(Math::Vector2(-6.0f, -4.0f));
+		m_points.push_back(Math::Vector2(-12.0f, -10.0f));
+        
         	break;
 		}
 	} 
@@ -233,6 +206,12 @@ namespace Engine
         glLoadIdentity();
         glTranslatef(m_position.x, m_position.y, 0.0);
         glRotatef(m_angle, 0.0f, 0.0f, 1.0f);
+
+       
+        glColor3f (1.0, 0.0, 0.0); // Rojo
+        glColor3f (0.0, 0.0, 1.0);  // Azul
+    
+
         glBegin(GL_LINE_LOOP);
             std::vector<Math::Vector2>::iterator it = m_points.begin();
             for(; it != m_points.end(); ++it)
