@@ -26,6 +26,7 @@ namespace Engine
 		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
 
 		m_ship = new Engine::Ship(this);
+		m_asteroid = new Engine::Asteroid(this);
 		
 	}
 
@@ -38,6 +39,9 @@ namespace Engine
 
 		// Removes ship allocation
 		delete m_ship;
+
+		// Remove Asteroids
+		delete m_asteroid;
 
 	}
 
@@ -138,6 +142,7 @@ namespace Engine
 
 		// Update code goes here
 		m_ship->Update(DESIRED_FRAME_TIME);
+		m_asteroid->Update(DESIRED_FRAME_TIME);
 
 		double endTime = m_timer->GetElapsedTimeInSeconds();
 		double nextTimeFrame = startTime + DESIRED_FRAME_TIME;
@@ -160,6 +165,7 @@ namespace Engine
 
 		// Render code goes here
 		m_ship->Render();
+		m_asteroid->Render();
 		
 		SDL_GL_SwapWindow(m_mainWindow);
 	}
