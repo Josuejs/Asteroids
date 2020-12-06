@@ -8,11 +8,13 @@
 
 // Asteroids
 #include "Vector2.hpp"
+#include "GameObject.hpp"
 
 namespace Engine
 {
+    class Bullet;
     class App;
-    class Ship
+    class Ship : public GameObject
     {
     public:
         /* ==========================
@@ -29,24 +31,17 @@ namespace Engine
         void RotateLeft(float deltaTime);
         void RotateRight(float deltaTime);
         void Update(float deltaTime);
-        void Render();
         void Respawn();
+        Bullet* Shoot();
 
     private:
         /* ==========================
         * PRIVATE FUNCTIONS
         * ==========================*/
-        void ApplyImpulse(Math::Vector2 impulse);
         void ApplyDrag(Math::Vector2 force);
         /* ==========================
         * MEMBERS
         * ==========================*/
-        std::vector<Engine::Math::Vector2> m_points;
-        Engine::Math::Vector2 m_position;
-        Engine::Math::Vector2 m_velocity;
-        float m_angle;
-        float m_mass;
-        float m_rotation;
         float m_currentSpeed;
         App* m_parent;
     };

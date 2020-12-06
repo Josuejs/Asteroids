@@ -1,11 +1,10 @@
 #include "Ship.hpp"
 #include "App.hpp"
 #include "vector2.hpp"
-//#include "Wrap.hpp"
+#include "Bullet.hpp"
 
 #include <gl\GL.h>
 #include <SDL2\SDL.h>
-
 
 // STL
 #include <iostream>
@@ -18,36 +17,23 @@ namespace Engine
     const float THRUST = 35.0f;
     const float DRAG_FORCE = 0.999f;
     const float ANGLE_OFFSET = 90.0f;
-   
-     // TODO: RR: Get this out of here!
-    inline float wrap(float x, float min, float max)
-    {
-        if(x < min) return max - (min - x);
-        if(x > max) return min + (x - max);
-        return x;
-    }
+    const float BULLET_SPEED = 250;
 
     Ship::Ship(App* parent)
-        : m_position(Math::Vector2::Origin)   
-        , m_velocity(Math::Vector2::Origin)  
-        , m_angle(0.0f)     
-        , m_rotation(350.0f)
-        , m_mass(1.0f)
+        : GameObject(1.0f, 0.0f, 250.0f)
         , m_parent(parent) // TODO: RR: Contemplate using a component based design approach
     {        
         std::cout << "Construction of ship\n";
         ChangeShip();
     }
-
-    Ship::Ship(App* parent, float _x, float _y)
-        : m_position(_x, _y)    
-        , m_velocity(Math::Vector2::Origin)  
-        , m_angle(0.0f)     
-        , m_rotation(350.0f)
-        , m_mass(1.0f)    
+   
+     Ship::Ship(App* parent, float _x, float _y)
+        : GameObject(1.0f, 0.0f, 250.0f)
         , m_parent(parent)
     {
+        m_position = Math::Vector2(_x, _y);
         std::cout << "Construction of ship\n";
+        ChangeShip();
     }
 
     Ship::~Ship()
@@ -57,7 +43,7 @@ namespace Engine
 
     void Ship::MoveUp()
     {
-        ApplyImpulse(Math::Vector2(THRUST));
+        ApplyImpulse(Math::Vector2(THRUST), m_angle + ANGLE_OFFSET);
     }
 
     void Ship::RotateLeft( float deltaTime )
@@ -74,15 +60,6 @@ namespace Engine
     {
         m_velocity.x *= force.x;
         m_velocity.y *= force.y;
-    }
-
-    void Ship::ApplyImpulse(Math::Vector2 impulse)
-    {
-        if(m_mass > 0)
-        {
-            m_velocity.x += (impulse.x / m_mass) * cosf((m_angle + ANGLE_OFFSET) * (Engine::Math::Vector2::PI / 180));
-            m_velocity.y += (impulse.y / m_mass) * sinf((m_angle + ANGLE_OFFSET) * (Engine::Math::Vector2::PI / 180));
-        }
     }
 
     void Ship::Update(float deltaTime)
@@ -105,19 +82,8 @@ namespace Engine
 
         // Applies drag
         ApplyDrag(Math::Vector2(DRAG_FORCE));
-
-        // Calculations for wrap around
-        float halfWidth = m_parent->GetWidth() / 2.0f;
-        float halfHeight = m_parent->GetHeight() / 2.0f;
-
-        float worldMinX = -halfWidth;
-        float worldMaxX = halfWidth;
-
-        float worldMinY = -halfHeight;
-        float worldMaxY = halfHeight;
-
-        m_position.x = wrap(m_position.x, worldMinX, worldMaxX);
-        m_position.y = wrap(m_position.y, worldMinY, worldMaxY);
+        GameObject::Update(m_parent, deltaTime);
+        
     }
 
 
@@ -185,6 +151,8 @@ namespace Engine
 		}
 	} 
 
+    
+
       void Ship::Respawn()
     {
         glLoadIdentity();
@@ -201,25 +169,17 @@ namespace Engine
         glBegin(GL_LINE_LOOP);
     }
 
-    void Ship::Render()
+     Bullet* Ship::Shoot()
     {
-        glLoadIdentity();
-        glTranslatef(m_position.x, m_position.y, 0.0);
-        glRotatef(m_angle, 0.0f, 0.0f, 1.0f);
+        float shootingAngle = m_angle + ANGLE_OFFSET;
+        float bulletPx = m_points[0].x * cosf(shootingAngle * (Engine::Math::Vector2::PI / 180));
+        float bulletPy = m_points[0].y * sinf(shootingAngle * (Engine::Math::Vector2::PI / 180));
 
-       
-        glColor3f (1.0, 0.0, 0.0); // Rojo
-        glColor3f (0.0, 0.0, 1.0);  // Azul
-    
+        Bullet* bullet = new Bullet(m_parent);        
+        bullet->Teleport(m_position.x + bulletPx, m_position.y + bulletPy);
+        bullet->ApplyImpulse(Math::Vector2(m_currentSpeed + BULLET_SPEED), shootingAngle);
 
-        glBegin(GL_LINE_LOOP);
-            std::vector<Math::Vector2>::iterator it = m_points.begin();
-            for(; it != m_points.end(); ++it)
-            {
-                glVertex2f((*it).x, (*it).y);
-            }
-        glEnd();
+        return bullet;
     }
-
-            
+                
 } // namespace engine
