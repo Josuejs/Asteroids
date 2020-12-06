@@ -8,6 +8,8 @@
 //
 #include "Ship.hpp"
 #include "Asteroid.hpp"
+#include "GameObject.hpp"
+#include "Bullet.hpp"
 
 namespace Engine
 {	
@@ -91,6 +93,50 @@ namespace Engine
 		return true;
 	}
 
+	void App::CreateBullet()
+	{
+		Engine::Bullet* pBullet = m_ship->Shoot();		
+		m_objects.push_back(pBullet);
+		m_bullets.push_back(pBullet);
+	}
+
+	void App::CleanGameObjects()
+	{
+		auto iter = std::find_if(m_objects.begin(), m_objects.end(),
+			[&](Engine::GameObject* entity) { return entity->IsDisappearing(); });
+		
+		if(iter != m_objects.end())
+		{
+			// Destroy it!
+			SDL_Log("Bullet should be deleted!");
+			DestroyGameObject(*iter);
+		}
+	}	
+
+	void App::DestroyGameObject(Engine::GameObject* object)
+	{
+		if(!object) return;
+
+		// Search for game object in our collections
+		auto gameObjectResult = std::find(m_objects.begin(), m_objects.end(), object);
+		auto bulletResult = std::find(m_bullets.begin(), m_bullets.end(), object);
+
+		// Remove allocation from memory
+		delete object;
+
+		// Remove element from game objects list
+		if(m_objects.size() > 0 && gameObjectResult != m_objects.end())
+		{
+			m_objects.erase(gameObjectResult);
+		}
+
+		// Remove element from bullets list
+		if(m_bullets.size() > 0 && bulletResult != m_bullets.end())
+		{
+			m_bullets.erase(bulletResult);
+		}
+	}
+
 
 	void App::OnKeyDown(SDL_KeyboardEvent keyBoardEvent)
     {
@@ -117,6 +163,10 @@ namespace Engine
         case SDL_SCANCODE_P:
             m_ship->Respawn();
             break;
+		case SDL_SCANCODE_SPACE:
+			SDL_Log("Shooting!");
+			CreateBullet();
+			break;
         default:
             SDL_Log("%S was pressed.", keyBoardEvent.keysym.scancode);
             break;
@@ -144,6 +194,15 @@ namespace Engine
 		m_ship->Update(DESIRED_FRAME_TIME);
 		m_asteroid->Update(DESIRED_FRAME_TIME);
 
+		std::list< Engine::Bullet* >::iterator ait = m_bullets.begin();
+		while(ait != m_bullets.end())
+		{
+			(*ait)->Update(DESIRED_FRAME_TIME);
+			++ait;
+		}
+
+		CleanGameObjects();
+
 		double endTime = m_timer->GetElapsedTimeInSeconds();
 		double nextTimeFrame = startTime + DESIRED_FRAME_TIME;
 
@@ -166,6 +225,13 @@ namespace Engine
 		// Render code goes here
 		m_ship->Render();
 		m_asteroid->Render();
+
+		std::list< Engine::Bullet* >::iterator bull = m_bullets.begin();
+		while(bull != m_bullets.end())
+		{
+			(*bull)->Render();
+			++bull;
+		}	
 		
 		SDL_GL_SwapWindow(m_mainWindow);
 	}
