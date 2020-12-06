@@ -3,20 +3,27 @@
 #ifndef ASTEROID_HPP
 #define ASTEROID_HPP
 
-// STL
-#include <vector>
-
+// Asteroids
 #include "Vector2.hpp"
+#include "GameObject.hpp"
 
 namespace Engine
-{
-    class Asteroid
-    {
-        public:
-            Asteroid();
-            void Render();
+{    
+    class App;
+    class Asteroid : public GameObject
+    {                
+        public:  
+            /* ==========================
+            * PUBLIC FUNCTIONS
+            * ==========================*/
+            Asteroid(App* parent);
+            void Update(float deltaTime);
         private:
-            std::vector<Engine::Math::Vector2> m_points;
+            /* ==========================
+            * MEMBERS
+            * ==========================*/            
+            App* m_parent;
     };
-} // namespace Engine
+}
+
 #endif

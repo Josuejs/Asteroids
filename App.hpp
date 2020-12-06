@@ -1,4 +1,3 @@
-  
 #pragma once
 
 #ifndef APP_HPP
@@ -13,6 +12,8 @@
 
 namespace Engine
 {
+    class GameObject;
+    class Bullet;
     class Ship;
     class Asteroid;
     class App : public SDLEvent
@@ -62,6 +63,13 @@ namespace Engine
             void OnExit          ( ) override;
             void OnKeyDown       ( SDL_KeyboardEvent keyBoardEvent ) override;
             void OnKeyUp         ( SDL_KeyboardEvent keyBoardEvent ) override;
+
+            /* =============================================================
+            * GAME FUNCTIONS
+            * ============================================================= */
+            void CleanGameObjects();
+            void CreateBullet();
+            void DestroyGameObject(Engine::GameObject* object);
             
            /* =============================================================
             * MEMBER
@@ -78,6 +86,8 @@ namespace Engine
             Engine::Ship*        m_ship;
             Engine::Asteroid*    m_asteroid;
             Engine::Ship*        m_currentShip;
+            std::list< Engine::GameObject* > m_objects;
+            std::list< Engine::Bullet* > m_bullets;
     };
 }
 
