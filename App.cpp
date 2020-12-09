@@ -8,11 +8,11 @@
 
 //
 #include "Ship.hpp"
-//#include "Asteroid.hpp"
+#include "vector2.hpp"
 #include "GameObject.hpp"
 #include "Bullet.hpp"
 
-namespace Engine
+namespace Engine	
 {
 	const float DESIRED_FRAME_RATE = 60.0f;
 	const float DESIRED_FRAME_TIME = 1.0f / DESIRED_FRAME_RATE;
@@ -102,6 +102,12 @@ namespace Engine
 		Engine::Bullet *pBullet = m_ship->Shoot();
 		m_objects.push_back(pBullet);
 		m_bullets.push_back(pBullet);
+	}
+
+	void App::Reset()
+	{
+		m_ship = new Engine::Ship(this);
+		m_objects.push_back(m_ship);
 	}
 
 	void App::CleanGameObjects()
@@ -263,6 +269,11 @@ namespace Engine
 			SDL_Log("Shooting!");
 			CreateBullet();
 			break;
+
+		case SDL_SCANCODE_R:
+			SDL_Log("Restart Game");
+			Reset();
+			break;	
 
 		default:
 			SDL_Log("%S was pressed.", keyBoardEvent.keysym.scancode);

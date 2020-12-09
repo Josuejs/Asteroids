@@ -153,7 +153,7 @@ namespace Engine
 
     
 
-      void Ship::Respawn()
+    void Ship::Respawn()
     {
         glLoadIdentity();
         m_position.x = 0.0f;

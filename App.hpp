@@ -77,6 +77,7 @@ namespace Engine
         void CreateDebris(Engine::Asteroid *object);
         void CheckCollision();
         void DestroyGameObject(Engine::GameObject *object);
+        void Reset();
 
         /* =============================================================
             * MEMBERS
