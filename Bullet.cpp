@@ -9,12 +9,10 @@
 
 namespace Engine
 {
-    Bullet::Bullet(App* parent)
-        : GameObject(1.0f, 0.0f, 0.0f)
-        , m_parent(parent)
-        , m_lifeSpan(120.0f)
-        , m_currentLifeSpan(0.0f)
-    {}
+    Bullet::Bullet(App *parent)
+        : GameObject(1.0f, 1.0f, 0.0f, 0.0f), m_parent(parent), m_lifeSpan(120.0f), m_currentLifeSpan(0.0f)
+    {
+    }
 
     void Bullet::Update(float deltaTime)
     {

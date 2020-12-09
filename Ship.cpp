@@ -2,6 +2,8 @@
 #include "App.hpp"
 #include "vector2.hpp"
 #include "Bullet.hpp"
+#include "GameObject.hpp"
+#include "Asteroid.hpp"
 
 #include <gl\GL.h>
 #include <SDL2\SDL.h>
@@ -13,28 +15,27 @@
 namespace Engine
 {
     // TODO: RR: Move this to a lib
-    const float MAX_VELOCITY = 225.0f;
-    const float THRUST = 35.0f;
+    const float MAX_VELOCITY = 125.0f;
+    const float THRUST = 10.0f;
     const float DRAG_FORCE = 0.999f;
     const float ANGLE_OFFSET = 90.0f;
     const float BULLET_SPEED = 250;
+    const float RADIUS = 10.0f;
 
-    Ship::Ship(App* parent)
-        : GameObject(1.0f, 0.0f, 250.0f)
-        , m_parent(parent) // TODO: RR: Contemplate using a component based design approach
-    {        
-        std::cout << "Construction of ship\n";
-        ChangeShip();
-    }
+    Ship::Ship(App *parent)
+		: GameObject(1.0f, RADIUS, 0.0f, 250.0f), m_parent(parent) // TODO: RR: Contemplate using a component based design approach
+	{
+		std::cout << "Construction of ship\n";
+		ChangeShip();
+	}
    
-     Ship::Ship(App* parent, float _x, float _y)
-        : GameObject(1.0f, 0.0f, 250.0f)
-        , m_parent(parent)
-    {
-        m_position = Math::Vector2(_x, _y);
-        std::cout << "Construction of ship\n";
-        ChangeShip();
-    }
+    Ship::Ship(App *parent, float _x, float _y)
+		: GameObject(1.0f, RADIUS, 0.0f, 250.0f), m_parent(parent)
+	{
+		m_position = Math::Vector2(_x, _y);
+		std::cout << "Construction of ship\n";
+		ChangeShip();
+	}
 
     Ship::~Ship()
     {
@@ -86,8 +87,7 @@ namespace Engine
         
     }
 
-
-     void Ship::ChangeShip()
+    void Ship::ChangeShip()
     {
         int m_currentShip;
     
